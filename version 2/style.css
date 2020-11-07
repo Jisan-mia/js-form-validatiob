@@ -203,18 +203,6 @@ body{
 		right: 10px;
 		top: 33px;
 	}
-	.submit-msg-inner h1{
-		font-size: 22px;
-	}
-	.submit-msg-inner{
-		padding: 40px
-	}
-	.preview-btn{
-	    padding: 4px 10px;
-	    background-color: orange;
-	    font-size: 15px;
-	    margin-top: 13px
-	}
 }
 @media (max-width: 375px){
 	#main-page{
@@ -263,15 +251,5 @@ body{
 	.form-group i{
 		right: 10px;
 		top: 32px;
-	}
-	
-	.submit-msg-inner{
-		padding: 20px
-	}
-	.preview-btn{
-	    padding: 4px 10px;
-	    background-color: orange;
-	    font-size: 14px;
-	    margin-top: 13px
 	}
 }
