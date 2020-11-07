@@ -1,132 +1,149 @@
-const form = document.getElementById('form');
-const userName = document.getElementById('username');
-const email = document.getElementById('email');
-// const phone = document.getElementById('phone');
-const password = document.getElementById('password');
-const cpassword = document.getElementById('retypepass');
+const userName = document.getElementById('username')
+const email = document.getElementById('email')
+const password = document.getElementById('password')
+const cpassword = document.getElementById('cpassword')
+const form = document.getElementById('form')
 
 
-//add event
-form.addEventListener('submit', (event) => {
-	console.log('form submit')
-	event.preventDefault();
+function showErrorMsg(input, msg){
+	const parent = input.parentNode;
+	const small = parent.querySelector('small');
+	small.innerText = msg;
+	parent.className = 'form-group error';
+}
 
-	validate();
-} )
+function showSuccesMsg(input){
+	const parent = input.parentNode;
+	parent.className = 'form-group success';
+}
 
 
-//is email(check the email)
-const isEmail = (emailVal) => {
-	let atSymbol = emailVal.indexOf('@');
-	if(atSymbol < 1) return false;
+//validate username
+function validateUserName(userNameValue){
+	if(userNameValue == ""){
+		showErrorMsg(userName, 'Field cannot be empty')
+	} else if (!isNaN(userNameValue)){
+		showErrorMsg(userName, 'Enter only characters');
+	} else if (userNameValue.length < 3 || userNameValue.length > 15){
+		showErrorMsg(userName, 'Name should be 3-15 char');
+	} else {
+		showSuccesMsg(userName);
+	}
 
-	let dot = emailVal.lastIndexOf('.');
-	if(dot <= atSymbol + 3) return false;
+}
 
-	if(dot === emailVal.length - 1) return false;
+//check email
+function isEmail(emailValue){
+	const atChar = emailValue.indexOf('@');
+	const dotChar = emailValue.lastIndexOf('.');
 
-	return true;
+	const lastAtPos = emailValue.lastIndexOf('@');
+    const lastDotPos = emailValue.lastIndexOf('.');
+    if (lastAtPos < lastDotPos && lastAtPos > 0 && emailValue.indexOf('@@') == -1 && lastDotPos > 2 && (emailValue.length - lastDotPos) > 2){
+    	return true;
+    }
+    return false;
+
+}
+
+//validate email
+function validateEmail(emailValue){
+	if(emailValue == ""){
+		showErrorMsg(email, 'Field cannot be empty');
+	} else if (isEmail(emailValue)){
+		showSuccesMsg(email);
+	} else {
+		showErrorMsg(email, 'Not a valid email')
+	}
+}
+
+
+//validate password
+function validatePassword(passwrodValue){
+	if(passwrodValue== ""){
+		showErrorMsg(password, 'Field cannot be emtpy');
+	} else if( passwrodValue.length < 8){
+		showErrorMsg(password, 'Password should be min 8 char');
+	} else {
+		showSuccesMsg(password);
+	}
+}
+
+
+//validate confirm password
+function validateConfirmPass(cpasswordValue){
+	if(cpasswordValue == ""){
+		showErrorMsg(cpassword, 'Field cannot be emtpy');
+	} else if( cpasswordValue.length < 8){
+		showErrorMsg(cpassword, 'Password should be min 8 char');
+	} else if ( cpasswordValue != password.value){
+		showErrorMsg(cpassword, "Password didn't match");
+	}
+	 else {
+		showSuccesMsg(cpassword);
+	}
 }
 
 const validate = () => {
-	const userNameVal= username.value.trim();
-	const emailVal = email.value.trim();
-	// const phoneVal = phone.value.trim();
-	const passwordVal = password.value.trim();
-	const cpasswordVal = cpassword.value.trim();
+	console.log('validate')
 
-	// validate userName
-	if(userNameVal === ""){
-		setErrorMsg(username, 'Username cannot be blank');
-	} else if (userNameVal.length <= 2) {
-		setErrorMsg(username, 'Enter min 3 char');
-	} else{
-		setSuccessmsg(username);
-	}
+	const userNameValue = userName.value.trim();
+	const emailValue = email.value.trim();
+	const passwrodValue =password.value.trim();
+	const cpasswordValue = cpassword.value.trim();
+	
+	//username validation
+	validateUserName(userNameValue)
 
-	// validate email
-	if(emailVal === ""){
-		setErrorMsg(email, 'Email cannot be blank');
-	} else if (!isEmail(emailVal) ) {
-		setErrorMsg(email, 'Not valid email');
-	} else{
-		setSuccessmsg(email);
-	}	
+	//email validation
+	validateEmail(emailValue);
 
-	//validate phone
-	/*if(phoneVal === ""){
-		setErrorMsg(phone, 'phone num cannot be blank');
-	} else if (phoneVal.length != 11 ) {
-		setErrorMsg(phone, 'not valid phone num');
-	} else{
-		setSuccessmsg(phone);
-	}*/
+	// password validation
+	validatePassword(passwrodValue);
 
-	//validate password
-	if(passwordVal === ""){
-		setErrorMsg(password, 'Password cannot be blank');
-	} else if (passwordVal.length < 8 ) {
-		setErrorMsg(password, 'Enter min 8 char');
-	} else{
-		setSuccessmsg(password);
-	}
-
-	//validate confirm password
-	if(cpasswordVal === ""){
-		setErrorMsg(cpassword, 'Field cannot be blank');
-	} else if (cpasswordVal.length < 8 ) {
-		setErrorMsg(cpassword, 'Enter min 8 char');
-	} else if( cpasswordVal != passwordVal  ){
-		setErrorMsg(cpassword, "Password didn't matched ");
-	} 
-
-	else{
-		setSuccessmsg(cpassword);
-	}
+	//confirm password validation
+	validateConfirmPass(cpasswordValue);
 
 
-
-	setTimeout(() => {
-		let successCls = document.querySelectorAll('.success');
-		if(successCls.length == 4){
-			showSubmittedMsg();
+	const successClass = document.querySelectorAll('.success');
+	setTimeout(function(){
+		if(successClass.length == 4){
+			formSuccessMsg();
 		}
-	}, 1000)
+	}, 400)
 	
-	
-
-}
-
-function showSubmittedMsg(){	
-	let mainPage = document.getElementById('main-page');
-	mainPage.style.display = 'none';
-	let successMsgPage = document.getElementById('submitted-msg');
-	successMsgPage.style.display = 'block'
-
-	document.getElementById('msg-name').innerText = userName.value;
 }
 
 
-function setErrorMsg(input, errormsg){
-	const formGroup = input.parentNode;
-	const small = formGroup.querySelector('small');
-	formGroup.className = 'form-group error';
-	small.innerText = errormsg;
-}
+function formSuccessMsg(){
+	document.getElementById('main-page').style.display = 'none';
+	document.getElementById('submitted-msg').style.display = 'block';
 
-function setSuccessmsg(input){
-	const fromGroup = input.parentNode;
-	fromGroup.className = 'form-group success';
-}
+	document.getElementById('msg-name').innerText = username.value;
 
+}
 
 function previewForm(){
 	document.getElementById('main-page').style.display = 'block';
 	document.getElementById('submitted-msg').style.display = 'none';
 
-	let submitBtn = document.getElementById('submit-btn');
+	const submitBtn =document.getElementById('submit-btn');
+
+	username.readOnly = true;
+	email.readOnly = true;
+	password.readOnly = true;
+	cpassword.readOnly = true;
+	
 	submitBtn.classList.remove('btn');
 	submitBtn.classList.add('disabled-btn');
 	submitBtn.disabled = true;
-
 }
+
+form.addEventListener('submit', function(e){
+	e.preventDefault();
+
+	//validation functin
+	validate();
+})
+
+
